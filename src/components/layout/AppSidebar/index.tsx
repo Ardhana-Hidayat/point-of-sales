@@ -29,7 +29,7 @@ const items = [
   },
   {
     title: "Kategori",
-    url: "#",
+    url: "/category",
     icon: Grid2X2Icon,
   },
   {
