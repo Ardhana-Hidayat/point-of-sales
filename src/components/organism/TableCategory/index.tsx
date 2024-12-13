@@ -13,9 +13,8 @@ import { CATEGORY_COLUMN } from "@/constant"
 import { useEffect, useState } from "react"
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
-import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
 import { FormEditCategory } from "@/components/form/FormEditCategory"
+import { ConfirmDelete } from "../ConfirmDelete"
 
 interface Category {
   id: number,
@@ -27,10 +26,13 @@ interface Category {
 export function TableCategory() {
   const [category, setCategory] = useState<Category[]>([])
   
-  useEffect(() => {
-    fetch('/api/category')
+  const fetchData = async () => {
+    await fetch('api/category')
     .then((res) => res.json())
     .then((data) => setCategory(data))
+  }
+  useEffect(() => {
+    fetchData()
   }, []);
 
   return (
@@ -52,10 +54,8 @@ export function TableCategory() {
                 <TableCell>{format(new Date(item.updatedAt), 'dd MMMM yyyy, HH:mm', {locale: id})}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <FormEditCategory categoryId={item.id} categoryName={item.name} />
-                    <Button size={'sm'} className="bg-transparent shadow-none text-red-500 hover:bg-red-100 border border-slate-300">
-                      <Trash2 />
-                    </Button>
+                    <FormEditCategory categoryId={item.id} categoryName={item.name} onRefresh={() => fetchData()}/>
+                    <ConfirmDelete categoryId={item.id} categoryName={item.name} onRefresh={() => fetchData()}/>
                   </div>
                 </TableCell>
               </TableRow>

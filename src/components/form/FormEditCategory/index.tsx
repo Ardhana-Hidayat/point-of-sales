@@ -15,16 +15,17 @@ import { useToast } from "@/hooks/use-toast"
 import { CategorySchema } from "@/lib/form-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Pencil } from "lucide-react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 interface CategoryByid {
     categoryId: number,
-    categoryName: string
+    categoryName: string,
+    onRefresh?: () => void,
 }
 
-export function FormEditCategory({ categoryId, categoryName }: CategoryByid) {
-
+export function FormEditCategory({ categoryId, categoryName, onRefresh }: CategoryByid) {
     const form = useForm<z.infer<typeof CategorySchema>>({
         resolver: zodResolver(CategorySchema),
         defaultValues: {
@@ -32,11 +33,11 @@ export function FormEditCategory({ categoryId, categoryName }: CategoryByid) {
         },
     });
 
+    const [isOpen, setIsOpen] = useState(false)
     const { toast } = useToast()
 
     const onSubmit = async (val: z.infer<typeof CategorySchema>) => {
-        console.log("onSubmit called", val);
-
+        
         try {
             const response = await fetch(`/api/category/${categoryId}`, {
                 method: 'PATCH',
@@ -47,21 +48,23 @@ export function FormEditCategory({ categoryId, categoryName }: CategoryByid) {
             });
 
             const data = await response.json();
-            console.log('Category updated successfully:', data);
+            console.log('data: ', data);
 
             form.reset();
             toast({
                 title: 'Berhasil edit data!',
-                description: `Kategori "${data.name}" berhasil diubah.`,
+                description: `Kategori ${data.name} berhasil diubah.`,
                 style: {
                     color: 'green',
                 },
             });
+            setIsOpen(false)
+            if(onRefresh) onRefresh()
         } catch (error) {
             console.error('Error editing category:', error);
 
             toast({
-                title: 'Gagal edit data!',
+                title: `Gagal edit data!`,
                 description: 'Terjadi kesalahan saat mengubah kategori.',
                 style: {
                     color: 'red',
@@ -70,10 +73,14 @@ export function FormEditCategory({ categoryId, categoryName }: CategoryByid) {
         }
     };
 
+
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size={'sm'} className="bg-transparent shadow-none text-slate-700 hover:bg-slate-100 border border-slate-300">
+                <Button 
+                size={'sm'} 
+                className="bg-transparent shadow-none text-slate-700 hover:bg-slate-100 border border-slate-300"
+                onClick={() => setIsOpen(true)}>
                     <Pencil />
                 </Button>
             </DialogTrigger>
@@ -101,7 +108,9 @@ export function FormEditCategory({ categoryId, categoryName }: CategoryByid) {
                                 )}
                             />
                             <div className="mt-5">
-                                <Button type="submit" className="w-full">Simpan</Button>
+                                <Button type="submit" className="w-full">
+                                    Simpan
+                                </Button>
                             </div>
                         </form>
                     </Form>
