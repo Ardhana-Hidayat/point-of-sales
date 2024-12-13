@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { CATEGORY_COLUMN } from "@/constant"
-import { useEffect, useState } from "react"
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { FormEditCategory } from "@/components/form/FormEditCategory"
@@ -23,18 +22,12 @@ interface Category {
   updatedAt: string,
 }
 
-export function TableCategory() {
-  const [category, setCategory] = useState<Category[]>([])
-  
-  const fetchData = async () => {
-    await fetch('api/category')
-    .then((res) => res.json())
-    .then((data) => setCategory(data))
-  }
-  useEffect(() => {
-    fetchData()
-  }, []);
+interface TableCategoryProps {
+  categories: Category[];
+  onRefresh: () => void
+}
 
+export function TableCategory({categories, onRefresh}: TableCategoryProps) {
   return (
     <Card className="shadow-none w-[700px]">
       <CardContent>
@@ -47,15 +40,15 @@ export function TableCategory() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {category.map((item, index) => (
+            {categories.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{format(new Date(item.createdAt), 'dd MMMM yyyy, HH:mm', {locale: id})}</TableCell>
                 <TableCell>{format(new Date(item.updatedAt), 'dd MMMM yyyy, HH:mm', {locale: id})}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <FormEditCategory categoryId={item.id} categoryName={item.name} onRefresh={() => fetchData()}/>
-                    <ConfirmDelete categoryId={item.id} categoryName={item.name} onRefresh={() => fetchData()}/>
+                    <FormEditCategory categoryId={item.id} categoryName={item.name} onRefresh={onRefresh}/>
+                    <ConfirmDelete categoryId={item.id} categoryName={item.name} onRefresh={onRefresh}/>
                   </div>
                 </TableCell>
               </TableRow>

@@ -16,7 +16,11 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { Input } from "@/components/ui/input"
 
-export function FormAddCategory() {
+interface AddCategoryProps {
+    onRefresh: () => void
+}
+
+export function FormAddCategory({onRefresh}: AddCategoryProps) {
 
     const form = useForm<z.infer<typeof CategorySchema>>({
         resolver: zodResolver(CategorySchema),
@@ -48,6 +52,7 @@ export function FormAddCategory() {
                     color: 'green',
                 },
             });
+            if (onRefresh) onRefresh()
         } catch (error) {
             console.error('Error adding category:', error);
 
