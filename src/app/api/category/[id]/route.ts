@@ -3,18 +3,19 @@ import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-// Singleton pattern untuk PrismaClient
-const prisma =  new PrismaClient();
+const prisma = new PrismaClient();
 
+// PATCH method
 export async function PATCH(req: NextRequest, context: { params: { id: string } }) {
   try {
     const body = await req.json();
-    const data = CategorySchema.parse(body); // Validasi body menggunakan Zod
+    const data = CategorySchema.parse(body);
 
-    const { id } = context.params;
+    const { id } = context.params; // Akses params melalui context.params
     const parsedId = parseInt(id, 10);
+
     if (isNaN(parsedId)) {
-      return NextResponse.json({ message: "Invalid ID. Must be a number." }, { status: 400 });
+      return NextResponse.json({ message: "ID tidak valid. Harus berupa angka." }, { status: 400 });
     }
 
     const updatedCategory = await prisma.category.update({
@@ -25,26 +26,27 @@ export async function PATCH(req: NextRequest, context: { params: { id: string } 
     return NextResponse.json(updatedCategory, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("Validation error:", error.errors);
+      console.error("Kesalahan validasi:", error.errors);
       return NextResponse.json({ errors: error.errors }, { status: 400 });
     }
 
-    console.error("Error updating category:", error);
+    console.error("Kesalahan saat memperbarui kategori:", error);
     return NextResponse.json(
-      { message: "An error occurred while updating the category." },
+      { message: "Terjadi kesalahan saat memperbarui kategori." },
       { status: 500 }
     );
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+// DELETE method
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   try {
-    const { id } = params;
+    const { id } = context.params; // Akses params melalui context.params
 
     const parsedId = parseInt(id, 10);
 
     if (isNaN(parsedId)) {
-      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+      return NextResponse.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
     const deletedCategory = await prisma.category.delete({
@@ -53,7 +55,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     return NextResponse.json(deletedCategory, { status: 200 });
   } catch (error) {
-    console.error("Error deleting category:", error);
-    return NextResponse.json({ message: "Failed to delete category" }, { status: 500 });
+    console.error("Kesalahan saat menghapus kategori:", error);
+    return NextResponse.json({ message: "Gagal menghapus kategori" }, { status: 500 });
   }
 }
