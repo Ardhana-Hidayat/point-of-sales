@@ -8,10 +8,19 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const categories = await prisma.category.findMany();
-    return NextResponse.json(categories);
+
+    if (!categories || categories.length === 0) {
+      return NextResponse.json({ message: 'No categories found' }, { status: 404 });
+    }
+
+    return NextResponse.json(categories, { status: 200 });
   } catch (error) {
     console.error('Error fetching categories:', error);
-    return NextResponse.error();
+
+    return NextResponse.json(
+      { message: 'Failed to fetch categories', error: error },
+      { status: 500 }
+    );
   }
 }
 
