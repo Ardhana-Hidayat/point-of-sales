@@ -9,7 +9,7 @@ export default function DashboardPage() {
 
         <div className="w-[600px] fixed bottom-10">
           <div className="w-[200px] mb-10">
-           
+           Ini halaman dashboard
           </div>
         </div>
       </div>
