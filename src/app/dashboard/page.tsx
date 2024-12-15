@@ -7,11 +7,6 @@ export default function DashboardPage() {
 
       <div className="space-y-5 mt-5">
 
-        <div className="w-[600px] fixed bottom-10">
-          <div className="w-[200px] mb-10">
-           Ini halaman dashboard
-          </div>
-        </div>
       </div>
     </div>
   );
