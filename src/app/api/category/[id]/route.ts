@@ -11,7 +11,7 @@ export async function PATCH(req: NextRequest, context: { params: { id: string } 
     const body = await req.json();
     const data = CategorySchema.parse(body);
 
-    const { id } = context.params; // Akses params melalui context.params
+    const { id } = context.params; 
     const parsedId = parseInt(id, 10);
 
     if (isNaN(parsedId)) {
