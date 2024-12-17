@@ -67,7 +67,7 @@ export function FormAddCategory({onRefresh}: AddCategoryProps) {
     };
 
     return (
-        <Card className="w-[300px] shadow-none">
+        <Card className="w-full shadow-none">
             <CardContent>
                 <div className="text-center m-5">
                     <label>Form Tambah Kategori</label>

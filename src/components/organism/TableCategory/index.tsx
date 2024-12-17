@@ -29,7 +29,7 @@ interface TableCategoryProps {
 
 export function TableCategory({categories, onRefresh}: TableCategoryProps) {
   return (
-    <Card className="shadow-none w-[700px]">
+    <Card className="shadow-none w-full">
       <CardContent>
         <Table className="mt-5">
           <TableHeader>
