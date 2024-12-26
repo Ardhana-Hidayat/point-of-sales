@@ -37,7 +37,6 @@ export function FormEditCategory({ categoryId, categoryName, onRefresh }: Catego
     const { toast } = useToast()
 
     const onSubmit = async (val: z.infer<typeof CategorySchema>) => {
-        
         try {
             const response = await fetch(`/api/category/${categoryId}`, {
                 method: 'PATCH',
@@ -59,7 +58,7 @@ export function FormEditCategory({ categoryId, categoryName, onRefresh }: Catego
                 },
             });
             setIsOpen(false)
-            if(onRefresh) onRefresh()
+            if (onRefresh) onRefresh()
         } catch (error) {
             console.error('Error editing category:', error);
 
@@ -73,14 +72,13 @@ export function FormEditCategory({ categoryId, categoryName, onRefresh }: Catego
         }
     };
 
-
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button 
-                size={'sm'} 
-                className="bg-transparent shadow-none text-slate-700 hover:bg-slate-100 border border-slate-300"
-                onClick={() => setIsOpen(true)}>
+                <Button
+                    size={'sm'}
+                    className="bg-transparent shadow-none text-slate-700 hover:bg-slate-100 border border-slate-300"
+                    onClick={() => setIsOpen(true)}>
                     <Pencil />
                 </Button>
             </DialogTrigger>

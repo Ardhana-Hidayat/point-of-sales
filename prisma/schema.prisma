@@ -19,6 +19,7 @@ model Category {
   name      String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  products  Products[] 
 }
 
 model Products {
@@ -26,6 +27,8 @@ model Products {
   name        String
   price       Int
   stock       Int
+  idCategory  Int      
+  category    Category  @relation(fields: [idCategory], references: [id]) 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   transaction Transaction[]
@@ -40,10 +43,10 @@ enum TransactionStatus {
 model Transaction {
   id            Int       @id @default(autoincrement())
   customerName  String
-  productId     Int  
+  idProduct     Int  
   quantity      Int
   total         Int
   status        TransactionStatus
   createdAt     DateTime  @default(now())
-  product       Products  @relation(fields: [productId], references: [id])
+  product       Products  @relation(fields: [idProduct], references: [id])
 }

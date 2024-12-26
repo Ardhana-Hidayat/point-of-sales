@@ -24,7 +24,7 @@ const items = [
   },
   {
     title: "Produk",
-    url: "#",
+    url: "/products",
     icon: Backpack,
   },
   {

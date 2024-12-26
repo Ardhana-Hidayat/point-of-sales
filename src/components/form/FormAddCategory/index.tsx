@@ -83,7 +83,7 @@ export function FormAddCategory({onRefresh}: AddCategoryProps) {
                                     <FormItem>
                                         <FormLabel className="text-slate-900">Nama Kategori</FormLabel>
                                         <FormControl>
-                                            <Input placeholder='Tambahkan Kategori Baru' {...field} />
+                                            <Input placeholder='Kategori Baru' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

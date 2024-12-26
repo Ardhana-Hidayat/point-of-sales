@@ -1,6 +1,19 @@
 export const CATEGORY_COLUMN = [
-    'Kategory',
-    'Create At',
-    'Update At',
+    'No',
+    'Kategori',
+    'Dibuat',
+    'Diubah',
     'Action'
 ]
+
+export const PRODUCT_COLUMN = [
+    'No',          
+    'Produk', 
+    'Harga',       
+    'Stok',        
+    'Kategori',    
+    'Dibuat',      
+    'Diubah',      
+    'Action'       
+  ];
+  

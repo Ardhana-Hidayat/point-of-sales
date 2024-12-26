@@ -1,30 +1,53 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { FormAddCategory } from "@/components/form/FormAddCategory";
-import { TableCategory } from "@/components/organism/Table/TableCategory";
 import { LoadingComponent } from "@/components/organism/Loading";
 import { Card, CardContent } from "@/components/ui/card";
+import { TableProduct } from "@/components/organism/Table/TableProducts";
 import PageHeader from "@/components/layout/Header";
+import { FormAddProduct } from "@/components/form/FormAddProduct";
 
-interface Category {
-    id: number,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-    onRefresh: () => void
+export interface Product {
+    id: number;
+    name: string;
+    price: number;
+    stock: number;
+    idCategory: number;
+    category: Category;
+    createdAt: string;
+    updatedAt: string;
 }
 
-export default function CategoryPage() {
+export interface Category {
+    id: number;
+    name: string;
+}
+
+export default function ProductPage() {
+    const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true)
 
-    const fetchData = async () => {
+    const fetchDataProduct = async () => {
         try {
-            const response = await fetch('api/category');
+            const response = await fetch('api/products');
             if (response.ok) {
                 setLoading(false)
             }
+            const data = await response.json();
+            setProducts(data);
+
+            if (!response.ok) {
+                console.log(`HTTP error! Status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Failed to fetch categories:', error);
+            setProducts([]);
+        }
+    };
+    const fetchDataCategory = async () => {
+        try {
+            const response = await fetch('api/category');
             const data = await response.json();
             setCategories(data);
 
@@ -38,14 +61,15 @@ export default function CategoryPage() {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchDataProduct();
+        fetchDataCategory();
     }, []);
 
 
     return (
         <div className="ml-5 w-[100%]">
             <div>
-                <PageHeader label="Kategori" />
+                <PageHeader label="Produk" />
             </div>
 
             <div className="flex w-full gap-5 mt-5">
@@ -55,13 +79,13 @@ export default function CategoryPage() {
                             <LoadingComponent />
                         ) : (
                             <div>
-                                <TableCategory onRefresh={() => fetchData()} categories={categories} />
+                                <TableProduct onRefresh={() => fetchDataProduct()} categories={categories} products={products} />
                             </div>
                         )}
                     </CardContent>
                 </Card>
                 <div>
-                    <FormAddCategory onRefresh={() => fetchData()} />
+                    <FormAddProduct onRefresh={() => fetchDataProduct()} categories={categories} />
                 </div>
             </div>
         </div>

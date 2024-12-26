@@ -13,20 +13,21 @@ import { useToast } from "@/hooks/use-toast"
 import { Trash2 } from "lucide-react"
 import { useState } from "react"
 
-interface CategoryByid {
-    categoryId: number,
-    categoryName: string,
+interface DeleteByid {
+    dataId: number,
+    dataName: string,
+    apiUrl: string,
     onRefresh?: () => void,
 }
 
-export function ConfirmDelete({ categoryId, categoryName, onRefresh }: CategoryByid) {
+export function ConfirmDelete({ dataId, dataName, apiUrl, onRefresh }: DeleteByid) {
 
     const [isOpen, setIsOpen] = useState(false)
     const { toast } = useToast()
 
     const onSubmit = async () => {
         try {
-            const response = await fetch(`/api/category/${categoryId}`, {
+            const response = await fetch(`/api/${apiUrl}/${dataId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,7 +39,7 @@ export function ConfirmDelete({ categoryId, categoryName, onRefresh }: CategoryB
 
             toast({
                 title: 'Berhasil hapus data!',
-                description: `Kategori ${data.name} berhasil dihapus.`,
+                description: `Data ${data.name} berhasil dihapus.`,
                 style: {
                     color: 'green',
                 },
@@ -46,11 +47,11 @@ export function ConfirmDelete({ categoryId, categoryName, onRefresh }: CategoryB
             setIsOpen(false)
             if (onRefresh) onRefresh()
         } catch (error) {
-            console.error('Error editing category:', error);
+            console.error('Error deleting data:', error);
 
             toast({
                 title: `Gagal hapus data!`,
-                description: 'Terjadi kesalahan saat menghapus kategori.',
+                description: 'Terjadi kesalahan saat menghapus data.',
                 style: {
                     color: 'red',
                 },
@@ -76,7 +77,7 @@ export function ConfirmDelete({ categoryId, categoryName, onRefresh }: CategoryB
                     </DialogDescription>
                 </DialogHeader>
                 <div className="my-2">
-                    Yakin untuk menghapus kategori {categoryName}?
+                    Yakin untuk menghapus {dataName}?
                 </div>
 
                 <div className="flex justify-between">
