@@ -19,7 +19,12 @@ const items = [
   },
   {
     title: "Transaksi",
-    url: "#",
+    url: "/transactions",
+    icon: DollarSign,
+  },
+  {
+    title: "Detail Transaksi",
+    url: "/detail-transactions",
     icon: DollarSign,
   },
   {

@@ -31,22 +31,30 @@ model Products {
   category    Category  @relation(fields: [idCategory], references: [id]) 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  transaction Transaction[]
-}
-
-enum TransactionStatus {
-  PENDING
-  COMPLETED
-  CANCELED
+  details     DetailTransaction[]
 }
 
 model Transaction {
-  id            Int       @id @default(autoincrement())
-  customerName  String
-  idProduct     Int  
-  quantity      Int
-  total         Int
-  status        TransactionStatus
-  createdAt     DateTime  @default(now())
-  product       Products  @relation(fields: [idProduct], references: [id])
+  id              Int                 @id @default(autoincrement())
+  transactionCode String              @unique @default(cuid())
+  customerName    String              
+  totalPrice      Int
+  payment         Int                 @default(0)
+  change          Int                 @default(0)
+  status          String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  details         DetailTransaction[] 
+}
+
+model DetailTransaction {
+  id            Int           @id @default(autoincrement())
+  idTransaction Int
+  idProduct     Int
+  quantity      Int           
+  subtotal      Int           
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  transaction   Transaction   @relation(fields: [idTransaction], references: [id], onDelete: Cascade)
+  product       Products      @relation(fields: [idProduct], references: [id])
 }

@@ -9,59 +9,71 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { CATEGORY_COLUMN } from "@/constant"
-import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
 import { FormEditCategory } from "@/components/form/FormEditCategory"
 import { ConfirmDelete } from "../../ConfirmDelete"
-
-interface Category {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Category } from "@/interface";
+import DateFormatter from "@/formatter";
+import { Card, CardContent } from "@/components/ui/card"
+import { LoadingComponent } from "../../Loading"
 
 interface TableCategoryProps {
   categories: Category[] | null | undefined;
   onRefresh: () => void;
+  loading: boolean;
 }
 
-export function TableCategory({ categories, onRefresh }: TableCategoryProps) {
+export function TableCategory({ categories, onRefresh, loading }: TableCategoryProps) {
   const checkCategories = Array.isArray(categories) ? categories : [];
 
   return (
-    <Table className="mt-5">
-      <TableHeader>
-        <TableRow>
-          {CATEGORY_COLUMN.map((item: string, index) => (
-            <TableHead key={index}>{item}</TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {checkCategories.length === 0 ? (
-          <TableRow>
-            <TableCell colSpan={4} className="text-center text-gray-500">
-              Tidak ada data kategori yang tersedia.
-            </TableCell>
-          </TableRow>
-        ) : (
-          checkCategories.map((item, index) => (
-            <TableRow key={index}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>{item.name}</TableCell>
-              <TableCell>{format(new Date(item.createdAt), 'dd-MM-yyyy, HH:mm', { locale: id })}</TableCell>
-              <TableCell>{format(new Date(item.updatedAt), 'dd-MM-yyyy, HH:mm', { locale: id })}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <FormEditCategory categoryId={item.id} categoryName={item.name} onRefresh={onRefresh} />
-                  <ConfirmDelete dataId={item.id} dataName={item.name} apiUrl="category" onRefresh={onRefresh} />
-                </div>
-              </TableCell>
+    <Card className="shadow-none">
+      <CardContent>
+        <Table className="mt-5">
+          <TableHeader>
+            <TableRow>
+              {CATEGORY_COLUMN.map((item: string, index) => (
+                <TableHead key={index}>{item}</TableHead>
+              ))}
             </TableRow>
-          ))
-        )}
-      </TableBody>
-    </Table>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <LoadingComponent />
+                </TableCell>
+              </TableRow>
+            ) : (
+              checkCategories.length === 0 || checkCategories === null ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-gray-500">
+                    Tidak ada data kategori yang tersedia.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                checkCategories.map((item, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>
+                      <DateFormatter data={item.createdAt} />
+                    </TableCell>
+                    <TableCell>
+                      <DateFormatter data={item.updatedAt} />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <FormEditCategory categoryId={item.id} categoryName={item.name} onRefresh={onRefresh} />
+                        <ConfirmDelete dataId={item.id} dataName={item.name} apiUrl="category" onRefresh={onRefresh} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )
+            )}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 }

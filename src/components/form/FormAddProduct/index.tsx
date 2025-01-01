@@ -16,15 +16,11 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Category } from "@/interface";
 
 interface SelectCategoryProps {
     categories: Category[]
     onRefresh: () => void
-}
-
-export interface Category {
-    id: number;
-    name: string;
 }
 
 export function FormAddProduct({ onRefresh, categories }: SelectCategoryProps) {
@@ -74,6 +70,8 @@ export function FormAddProduct({ onRefresh, categories }: SelectCategoryProps) {
             });
         }
     };
+
+    const checkCategory = Array.isArray(categories) ? categories : [];
 
     return (
         <Card className="w-full shadow-none">
@@ -157,16 +155,22 @@ export function FormAddProduct({ onRefresh, categories }: SelectCategoryProps) {
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Pilih Kategori" />
                                                 </SelectTrigger>
-                                                <SelectContent>
-                                                    {categories.map((category) => (
-                                                        <SelectItem
-                                                            key={category.id}
-                                                            value={category.id.toString()}
-                                                        >
-                                                            {category.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
+                                                {checkCategory.length === 0 || checkCategory === null ? (
+                                                    <SelectContent className="text-sm text-gray-500 text-center">
+                                                        Tidak ada kategori.
+                                                    </SelectContent>
+                                                ) : (
+                                                    <SelectContent>
+                                                        {checkCategory.map((category) => (
+                                                            <SelectItem
+                                                                key={category.id}
+                                                                value={category.id.toString()}
+                                                            >
+                                                                {category.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                )}
                                             </Select>
                                         </FormControl>
                                         <FormMessage />
@@ -181,6 +185,6 @@ export function FormAddProduct({ onRefresh, categories }: SelectCategoryProps) {
                     </Form>
                 </div>
             </CardContent>
-        </Card>
+        </Card >
     );
 }

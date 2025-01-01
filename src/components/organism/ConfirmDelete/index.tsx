@@ -59,13 +59,12 @@ export function ConfirmDelete({ dataId, dataName, apiUrl, onRefresh }: DeleteByi
         }
     };
 
-
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size={'sm'} 
-                className="bg-transparent shadow-none text-red-500 hover:bg-red-100 border border-slate-300"
-                onClick={() => setIsOpen(true)}>
+                <Button size={'sm'}
+                    className="bg-transparent shadow-none text-red-500 hover:bg-red-100 border border-slate-300"
+                    onClick={() => setIsOpen(true)}>
                     <Trash2 />
                 </Button>
             </DialogTrigger>

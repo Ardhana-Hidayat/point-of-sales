@@ -1,70 +1,42 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { LoadingComponent } from "@/components/organism/Loading";
-import { Card, CardContent } from "@/components/ui/card";
-import { TableProduct } from "@/components/organism/Table/TableProducts";
+import { TableProduct } from "@/components/organism/Table/TableProduct";
 import PageHeader from "@/components/layout/Header";
 import { FormAddProduct } from "@/components/form/FormAddProduct";
-
-export interface Product {
-    id: number;
-    name: string;
-    price: number;
-    stock: number;
-    idCategory: number;
-    category: Category;
-    createdAt: string;
-    updatedAt: string;
-}
-
-export interface Category {
-    id: number;
-    name: string;
-}
+import { Category, Product } from "@/interface";
+import { fetchCategories, fetchProducts } from "@/lib/fetch-data";
 
 export default function ProductPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true)
 
-    const fetchDataProduct = async () => {
+    const fetchData = async () => {
+        setLoading(true);
         try {
-            const response = await fetch('api/products');
-            if (response.ok) {
-                setLoading(false)
+            const [productData, categoryData] = await Promise.all([
+                fetchProducts(),
+                fetchCategories()
+            ]);
+    
+            if (productData.length === 0 && categoryData.length === 0) {
+                console.warn("data is empty.");
+            } else {
+                setProducts(productData);
+                setCategories(categoryData);
             }
-            const data = await response.json();
-            setProducts(data);
-
-            if (!response.ok) {
-                console.log(`HTTP error! Status: ${response.status}`);
-            }
+    
         } catch (error) {
-            console.error('Failed to fetch categories:', error);
-            setProducts([]);
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
         }
-    };
-    const fetchDataCategory = async () => {
-        try {
-            const response = await fetch('api/category');
-            const data = await response.json();
-            setCategories(data);
-
-            if (!response.ok) {
-                console.log(`HTTP error! Status: ${response.status}`);
-            }
-        } catch (error) {
-            console.error('Failed to fetch categories:', error);
-            setCategories([]);
-        }
-    };
+    };    
 
     useEffect(() => {
-        fetchDataProduct();
-        fetchDataCategory();
+        fetchData();
     }, []);
-
 
     return (
         <div className="ml-5 w-[100%]">
@@ -73,19 +45,11 @@ export default function ProductPage() {
             </div>
 
             <div className="flex w-full gap-5 mt-5">
-                <Card className="shadow-none">
-                    <CardContent>
-                        {loading ? (
-                            <LoadingComponent />
-                        ) : (
-                            <div>
-                                <TableProduct onRefresh={() => fetchDataProduct()} categories={categories} products={products} />
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
                 <div>
-                    <FormAddProduct onRefresh={() => fetchDataProduct()} categories={categories} />
+                    <TableProduct onRefresh={() => fetchData()} categories={categories} products={products} loading={loading} />
+                </div>
+                <div>
+                    <FormAddProduct onRefresh={() => fetchData()} categories={categories} />
                 </div>
             </div>
         </div>
