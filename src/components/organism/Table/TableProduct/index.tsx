@@ -12,7 +12,7 @@ import { ConfirmDelete } from "../../ConfirmDelete"
 import { PRODUCT_COLUMN } from "@/constant";
 import { FormEditProduct } from "@/components/form/FormEditProduct";
 import { Category, Product } from "@/interface";
-import DateFormatter from "@/formatter";
+import { DateFormatter, FormatCurrencyIDR } from "@/formatter";
 import { Card, CardContent } from "@/components/ui/card";
 import { LoadingComponent } from "../../Loading";
 
@@ -56,15 +56,17 @@ export function TableProduct({ categories, products, onRefresh, loading }: Table
                                     <TableRow key={index}>
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{item.name}</TableCell>
-                                        <TableCell>{item.price}</TableCell>
+                                        <TableCell>
+                                            <FormatCurrencyIDR amount={item.price} />
+                                        </TableCell>
                                         <TableCell>{item.stock}</TableCell>
                                         <TableCell>{item.category.name}</TableCell>
                                         <TableCell>
                                             <DateFormatter data={item.createdAt} />
                                         </TableCell>
-                                        <TableCell>
+                                        {/* <TableCell>
                                             <DateFormatter data={item.updatedAt} />
-                                        </TableCell>
+                                        </TableCell> */}
                                         <TableCell>
                                             <div className="flex gap-2">
                                                 <FormEditProduct productId={item.id} productName={item.name} productPrice={item.price} productStock={item.stock} productCategory={item.idCategory} onRefresh={onRefresh} categories={categories} />

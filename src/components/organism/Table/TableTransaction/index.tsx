@@ -9,10 +9,10 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { TRANSACTION_COLUMN } from "@/constant"
-import DateFormatter from "@/formatter";
 import { Transaction } from "@/interface";
 import { LoadingComponent } from "../../Loading";
 import { Card, CardContent } from "@/components/ui/card";
+import { DateFormatter } from "@/formatter";
 
 interface TransactionProps {
     transaction: Transaction[] | null | undefined;

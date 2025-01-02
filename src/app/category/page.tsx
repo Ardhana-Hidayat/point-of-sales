@@ -8,7 +8,7 @@ import { ConfirmDelete } from "@/components/organism/ConfirmDelete";
 import { FormEditCategory } from "@/components/form/FormEditCategory";
 import { Category, ColumnConfig } from "@/interface";
 import { TableComponent } from "@/components/organism/Table";
-import DateFormatter from "@/formatter";
+import { DateFormatter } from "@/formatter";
 
 export default function CategoryPage() {
     const [categories, setCategories] = useState<Category[]>([]);

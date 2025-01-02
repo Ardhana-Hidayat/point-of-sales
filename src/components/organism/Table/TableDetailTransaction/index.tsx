@@ -9,10 +9,10 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { DETAIL_TRANSACTION_COLUMN } from "@/constant"
-import DateFormatter from "@/formatter";
 import { DetailTransaction } from "@/interface";
 import { LoadingComponent } from "../../Loading";
 import { Card, CardContent } from "@/components/ui/card";
+import { DateFormatter, FormatCurrencyIDR } from "@/formatter";
 
 interface DetailTransactionProps {
     transaction: DetailTransaction[] | null | undefined;
@@ -55,9 +55,15 @@ export function TableDetailTransaction({ transaction, loading }: DetailTransacti
                                         <TableCell>{item.transaction.customerName}</TableCell>
                                         <TableCell>{item.product.name}</TableCell>
                                         <TableCell>{item.quantity}</TableCell>
-                                        <TableCell>{item.subtotal}</TableCell>
-                                        <TableCell>{item.transaction.payment}</TableCell>
-                                        <TableCell>{item.transaction.change}</TableCell>
+                                        <TableCell>
+                                            <FormatCurrencyIDR amount={item.subtotal} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <FormatCurrencyIDR amount={item.transaction.payment} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <FormatCurrencyIDR amount={item.transaction.change} />
+                                        </TableCell>
                                         <TableCell>{item.transaction.status}</TableCell>
                                         <TableCell>
                                             <DateFormatter data={item.createdAt} />

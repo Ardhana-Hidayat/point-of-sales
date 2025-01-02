@@ -13,7 +13,6 @@ export const PRODUCT_COLUMN = [
     'Stok',
     'Kategori',
     'Dibuat',
-    'Diubah',
     'Action'
 ];
 

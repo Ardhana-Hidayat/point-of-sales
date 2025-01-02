@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LoadingComponent } from "../../Loading";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import { FormatCurrencyIDR } from "@/formatter";
 
 interface TableProductProps {
     products: Product[] | null | undefined;
@@ -56,7 +57,9 @@ export function TableAddProduct({ products, loading, addToCart }: TableProductPr
                                     <TableRow key={index}>
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{item.name}</TableCell>
-                                        <TableCell>{item.price}</TableCell>
+                                        <TableCell>
+                                            <FormatCurrencyIDR amount={item.price} />
+                                        </TableCell>
                                         <TableCell>
                                             <div>
                                                 <Button size={'sm'} onClick={() => addToCart(item)} className="bg-white border border-gray-200 text-sm hover:bg-slate-300 shadow-none text-slate-900 ">
