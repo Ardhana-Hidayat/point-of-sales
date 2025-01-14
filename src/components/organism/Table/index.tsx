@@ -38,7 +38,7 @@ export function TableComponent<T>({ data, columns, loading = false, emptyMessage
     return (
         <Card className="shadow-none">
             <CardContent>
-                <Table className="mt-5">
+                <Table className="mt-5 w-full">
                     <TableHeader>
                         <TableRow>
                             <TableHead>No</TableHead>
@@ -50,14 +50,14 @@ export function TableComponent<T>({ data, columns, loading = false, emptyMessage
                     <TableBody>
                         {loading ? (
                             <TableRow>
-                                <TableCell colSpan={columns.length}>
+                                <TableCell colSpan={9}>
                                     <LoadingComponent />
                                 </TableCell>
                             </TableRow>
                         ) : (
                             checkData.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="text-center text-gray-500">
+                                    <TableCell colSpan={9} className="text-center text-gray-500">
                                         {emptyMessage}
                                     </TableCell>
                                 </TableRow>

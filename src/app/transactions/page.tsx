@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from "react";
 import PageHeader from "@/components/layout/Header";
-import { Category, Product, Transaction } from "@/interface";
-import DashboardTransaction from "@/components/organism/DashboardTransaction";
+import { Category, ColumnConfig, Product, Transaction } from "@/interface";
 import { fetchCategories, fetchProducts, fetchTransactions } from "@/lib/fetch-data";
 import FormAddTransaction from "@/components/form/FormAddTransaction";
+import { TableAddProduct } from "@/components/organism/Table/TableAddProduct";
+import { DateFormatter } from "@/formatter";
+import { TableComponent } from "@/components/organism/Table";
+import { Status } from "@/components/organism/Status";
 
 interface CartItem extends Product {
     quantity: number;
@@ -79,10 +82,32 @@ export default function TransactionPage() {
     };
 
     const removeFromCartById = (productId: number) => {
-        const updatedCart = cart.filter((item) => item.id !== productId); 
-        setCart(updatedCart); 
-        localStorage.setItem("cart", JSON.stringify(updatedCart)); 
+        const updatedCart = cart.filter((item) => item.id !== productId);
+        setCart(updatedCart);
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
+
+    const columns: ColumnConfig<Transaction>[] = [
+        { key: "transactionCode", header: "Kode", render: (item) => item.transactionCode },
+        { key: "customerName", header: "Pelanggan", render: (item) => item.customerName },
+        { 
+            key: "status", 
+            header: "Status", 
+            render: (item) => {
+                return (
+                    <Status data={item.status} />
+                )
+            }},
+        {
+            key: "createdAt",
+            header: "Dibuat",
+            render: (item) => {
+                return (
+                    <DateFormatter data={item.createdAt} />
+                )
+            }
+        },
+    ];
 
     return (
         <div className="ml-5 w-[100%]">
@@ -91,15 +116,14 @@ export default function TransactionPage() {
             </div>
 
             <div className="flex w-full gap-5 mt-5">
-                <div>
-                    <DashboardTransaction
-                        products={products}
-                        transaction={transaction}
-                        categories={categories}
-                        onRefresh={fetchData}
-                        addToCart={addToCart}
-                        loading={loading}
-                    />
+                <div className="space-y-5">
+                    <div>
+                        <TableComponent data={transaction} columns={columns} onRefresh={() => fetchData()} loading={loading} />
+                    </div>
+
+                    <div>
+                        <TableAddProduct products={products} categories={categories} onRefresh={() => fetchData()} addToCart={addToCart} loading={loading} />
+                    </div>
                 </div>
                 <div>
                     <FormAddTransaction onRefresh={fetchData} cart={cart} updateQuantity={updateQuantity} removeItem={removeFromCartById} />
